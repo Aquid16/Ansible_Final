@@ -1,0 +1,22 @@
+---
+- name: Install cronie
+  ansible.builtin.dnf:
+    name: cronie
+    state: latest
+
+- name: Start crond
+  ansible.builtin.service:
+    name: crond
+    state: started
+
+- name: Create crontab job
+  ansible.builtin.cron:
+    name: "Restart Server"
+    job: "shutdown -r now"
+    minute: "{{ restart.split()[0] }}"
+    hour: "{{ restart.split()[1] }}"
+    day: "{{ restart.split()[2] }}"
+    month: "{{ restart.split()[3] }}"
+    weekday: "{{ restart.split()[4] }}"
+    user: root
+

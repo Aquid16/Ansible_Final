@@ -1,0 +1,7 @@
+---
+- name: Install services on AWS
+  hosts: all
+  become: true
+  roles:
+    - services_role
+    - restart_role

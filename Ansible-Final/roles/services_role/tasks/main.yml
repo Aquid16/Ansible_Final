@@ -1,0 +1,28 @@
+---
+- name: Update the packages
+  ansible.builtin.dnf:
+    update_cache: true
+
+- name: Wget to install mysql
+  ansible.builtin.dnf:
+    name: https://repo.mysql.com//mysql84-community-release-el9-1.noarch.rpm
+    disable_gpg_check: true
+    state: latest
+  when: "'{{ service }}' == 'mysql-community-server'"
+    
+- name: Install the Services
+  ansible.builtin.dnf:
+    name: "{{ service }}-{{ version }}"
+    state: present
+    
+- name: Starting mysqld
+  ansible.builtin.service:
+    name: mysqld.service
+    state: started
+  when: "'{{ service }}' == 'mysql-community-server'"
+  
+- name: Starting nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+  when: "'{{ service }}' == 'nginx'"
